@@ -179,10 +179,6 @@ bool: true
         assertThat(JacksonYaml.asA(asString), equalTo(wrapper))
     }
 
-
-    override fun strictMarshaller() =
-        object : ConfigurableJacksonYaml(KotlinModule.Builder().build().asConfigurable().customise()) {}
-
     override fun customMarshaller() =
         object : ConfigurableJacksonYaml(KotlinModule.Builder().build().asConfigurable().customise()) {}
 

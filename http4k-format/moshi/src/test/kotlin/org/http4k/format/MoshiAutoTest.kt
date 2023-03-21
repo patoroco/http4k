@@ -2,17 +2,14 @@ package org.http4k.format
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.squareup.moshi.Moshi.Builder
 import org.http4k.core.Body
 import org.http4k.core.Response
-import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Status
 import org.http4k.core.with
 import org.http4k.format.Moshi.auto
 import org.http4k.format.StrictnessMode.FailOnUnknown
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import java.math.BigDecimal
-import java.math.BigInteger
 
 class MoshiAutoTest : AutoMarshallingJsonContract(Moshi) {
 
@@ -25,7 +22,7 @@ class MoshiAutoTest : AutoMarshallingJsonContract(Moshi) {
         val body = Body.auto<List<ArbObject>>().toLens()
 
         val expected = listOf(obj)
-        val actual = body(Response(OK).with(body of expected))
+        val actual = body(Response(Status.OK).with(body of expected))
         assertThat(actual, equalTo(expected))
     }
 
@@ -163,44 +160,13 @@ class MoshiAutoTest : AutoMarshallingJsonContract(Moshi) {
     }
 
     override fun strictMarshaller() = object : ConfigurableMoshi
-        (Builder().asConfigurable().customise(), strictness = FailOnUnknown) {}
+        (com.squareup.moshi.Moshi.Builder().asConfigurable().customise(), strictness = FailOnUnknown) {}
 
-    override fun customMarshaller() = object : ConfigurableMoshi(Builder().asConfigurable().customise()) {}
+    override fun customMarshaller() =
+        object : ConfigurableMoshi(com.squareup.moshi.Moshi.Builder().asConfigurable().customise()) {}
+
     override fun customMarshallerProhibitStrings() = object : ConfigurableMoshi(
-        Builder().asConfigurable().prohibitStrings()
+        com.squareup.moshi.Moshi.Builder().asConfigurable().prohibitStrings()
             .customise()
     ) {}
-}
-
-class MoshiJsonTest : JsonContract<MoshiNode>(Moshi) {
-    override val prettyString = """{
-    "hello": "world"
-}"""
-
-    @Test
-    override fun `serializes object to json`() {
-        j {
-            val input = obj(
-                "string" to string("value"),
-                "double" to number(1.5),
-                "long" to number(10L),
-                "boolean" to boolean(true),
-                "bigDec" to number(BigDecimal(1.2)),
-                "bigInt" to number(BigInteger("12344")),
-                "null" to nullNode(),
-                "int" to number(2),
-                "empty" to obj(),
-                "array" to array(
-                    listOf(
-                        string(""),
-                        number(123)
-                    )
-                ),
-                "singletonArray" to array(obj("number" to number(123)))
-            )
-            val expected =
-                """{"string":"value","double":1.5,"long":10,"boolean":true,"bigDec":1.2,"bigInt":12344,"int":2,"empty":{},"array":["",123],"singletonArray":[{"number":123}]}"""
-            assertThat(compact(input), equalTo(expected))
-        }
-    }
 }

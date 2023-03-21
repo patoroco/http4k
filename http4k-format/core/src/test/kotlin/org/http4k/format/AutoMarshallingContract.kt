@@ -74,7 +74,7 @@ class MyValue(value: String) : StringValue(value) {
 data class MyValueHolder(val value: MyValue?)
 data class MyValueHolderHolder(val value: MyValueHolder?)
 
-abstract class AutoMarshallingContract(private val marshaller: AutoMarshalling) {
+abstract class AutoMarshallingContract(val marshaller: AutoMarshalling) {
 
     protected abstract val expectedAutoMarshallingResult: String
     protected abstract val expectedAutoMarshallingResultPrimitives: String
@@ -282,7 +282,7 @@ abstract class AutoMarshallingContract(private val marshaller: AutoMarshalling) 
         assertThat({ strictMarshaller().asA(inputUnknownValue, StringHolder::class) }, throws<Exception>())
     }
 
-    abstract fun strictMarshaller(): AutoMarshalling
+    open fun strictMarshaller(): AutoMarshalling = customMarshaller()
     abstract fun customMarshaller(): AutoMarshalling
     abstract fun customMarshallerProhibitStrings(): AutoMarshalling
 }

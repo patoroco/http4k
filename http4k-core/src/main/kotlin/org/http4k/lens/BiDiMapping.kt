@@ -123,7 +123,7 @@ object StringBiDiMappings {
     } catch (e: IllegalArgumentException) { null }
 }
 
-internal fun Throwable.asString() = StringWriter().use { output -> PrintWriter(output).use { printer -> printStackTrace(printer); output.toString() } }
+fun Throwable.asString() = StringWriter().use { output -> PrintWriter(output).use { printer -> printStackTrace(printer); output.toString() } }
 
 internal fun String.asSafeBoolean(): Boolean =
     when {

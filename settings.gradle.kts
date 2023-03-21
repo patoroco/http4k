@@ -48,6 +48,7 @@ include("http4k-contract")
 "http4k-format".apply {
     includeModule("core")
     includeModule("argo")
+    includeModule("dsl-json")
     includeModule("gson")
     includeModule("jackson")
     includeModule("jackson-xml")

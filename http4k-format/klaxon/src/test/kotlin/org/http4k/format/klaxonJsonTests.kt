@@ -9,7 +9,6 @@ import org.http4k.core.with
 import org.http4k.format.Klaxon.auto
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import java.lang.UnsupportedOperationException
 import com.beust.klaxon.Klaxon as KKlaxon
 
 class KlaxonAutoTest : AutoMarshallingJsonContract(Klaxon) {
@@ -21,8 +20,6 @@ class KlaxonAutoTest : AutoMarshallingJsonContract(Klaxon) {
 
     override fun customMarshaller() = object : ConfigurableKlaxon(KKlaxon().asConfigurable().customise()) {}
     override fun customMarshallerProhibitStrings()= object : ConfigurableKlaxon(KKlaxon().asConfigurable().prohibitStrings().customise()) {}
-
-    override fun strictMarshaller() = throw UnsupportedOperationException()
 
     @Test
     fun `write interface implementation to body`() {
